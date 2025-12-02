@@ -179,7 +179,9 @@ These were registered as a reusable Data Asset in Azure ML:
 We developed an MLOps pipeline based on three independent modular components, each packaged as:
 
 ✔ Python script
+
 ✔ YAML specification
+
 ✔ Container environment + inputs/outputs definition
 
 This allows traceability, reuse, version control and reproducibility.
@@ -197,8 +199,11 @@ test.parquet
 📌 What it does
 
 ✔ Reads Gold data
+
 ✔ Joins performance + value tables
+
 ✔ Performs 80/20 train–test split
+
 ✔ Saves outputs for downstream stages
 
 Component B — Feature Selection (Baseline Method)
@@ -208,7 +213,9 @@ Automatically select informative features prior to training.
 📌 What it does
 
 ✔ Reads training parquet
+
 ✔ Applies VarianceThreshold feature filtering
+
 ✔ Stores list of selected features in .json output
 
 📌 Output
@@ -224,10 +231,16 @@ Train a supervised ML model inventory and evaluate it.
 📌 What it does
 
 ✔ Loads train/test data
+
+
 ✔ Reads selected feature list from Component B
+
 ✔ Trains a Random Forest model
+
 ✔ Predicts on test data
+
 ✔ Calculates RMSE
+
 ✔ Saves model artifact + metrics
 
 📌 Outputs
@@ -254,6 +267,7 @@ Feeds selected features + datasets into training component
 Returns the trained model and evaluation metrics
 
 ✔ We set default compute = compute1
+
 ✔ We executed the pipeline through Azure ML Job submission
 
 Output appeared in Azure ML Studio under Jobs.
@@ -262,6 +276,7 @@ Output appeared in Azure ML Studio under Jobs.
 Once training completed successfully:
 
 ✔ Model artifact was stored
+
 ✔ Metadata included feature selection list + version reference
 
 This enables future deployment or retraining using lineage traceability.
@@ -270,23 +285,41 @@ This enables future deployment or retraining using lineage traceability.
 We created a production-style project structure:
 
 player_mlops/
+
 │
+
 ├── components/
+
 │   ├── feature_retrieval.py
+
 │   ├── feature_retrieval.yml
+
 │   ├── feature_selection.py
+
 │   ├── feature_selection.yml
+
 │   ├── train_eval.py
+
 │   └── train_eval.yml
+
 │
+
 ├── pipeline_job.py   ← Pipeline definition & submission
+
 └── README.md         ← Documentation
+
 This follows MLOps best practices for modularity and maintainability.
 
 6. What We Achieved in Phase 2
+
 ✔ Built automated model workflow
+
 ✔ Applied structured feature selection
+
 ✔ Enabled reproducible ML training
+
 ✔ Registered model artifacts for deployment
+
 ✔ Used Azure ML Pipelines and Compute Cluster execution
+
 ✔ Created reusable components for retraining or scheduling
