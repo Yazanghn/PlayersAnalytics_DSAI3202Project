@@ -1,0 +1,24 @@
+name: train_eval
+display_name: Train Model Component
+type: command
+inputs:
+  train_input:
+    type: uri_file
+  test_input:
+    type: uri_file
+  selected_features:
+    type: uri_file
+outputs:
+  model_output:
+    type: uri_file
+  metrics_output:
+    type: uri_file
+code: .
+environment: azureml:AzureML-sklearn-1.0
+command: >
+  python train_eval.py
+  --train_input ${{inputs.train_input}}
+  --test_input ${{inputs.test_input}}
+  --selected_features ${{inputs.selected_features}}
+  --model_output ${{outputs.model_output}}
+  --metrics_output ${{outputs.metrics_output}}
