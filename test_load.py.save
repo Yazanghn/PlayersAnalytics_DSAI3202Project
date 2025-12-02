@@ -1,0 +1,5 @@
+from azure.ai.ml import MLClient, load_component
+from azure.identity import DefaultAzureCredential
+
+retrieval = load_component("components/feature_retrieval.yml")
+print(retrieval)
