@@ -1,0 +1,15 @@
+name: feature_selection
+display_name: Feature Selection Component
+type: command
+inputs:
+  train_input:
+    type: uri_file
+outputs:
+  selected_features_output:
+    type: uri_file
+code: .
+environment: azureml:AzureML-sklearn-1.0
+command: >
+  python feature_selection.py
+  --train_input ${{inputs.train_input}}
+  --selected_features_output ${{outputs.selected_features_output}}
