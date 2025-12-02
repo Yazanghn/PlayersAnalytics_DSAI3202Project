@@ -1,0 +1,28 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandComponent.schema.json
+
+name: player_feature_retrieval
+display_name: Player Feature Retrieval
+type: command
+
+inputs:
+  gold_data:
+    type: uri_folder
+
+outputs:
+  train_output:
+    type: uri_file
+  test_output:
+    type: uri_file
+
+code: ..
+environment: azureml:AzureML-sklearn-1.0-ubuntu20.04-py38-cpu@latest
+
+command: >
+  python components/feature_retrieval.py 
+  --gold_data ${{inputs.gold_data}}
+
+  --train_output ${{outputs.train_output}}
+  
+  --test_output ${{outputs.test_output}}
+
+is_deterministic: true
