@@ -160,4 +160,133 @@ As a group, we accomplished:
 - Detailed validation through correlation analysis  
 - Creation of a complete machine-learning-ready dataset  
 
+# README — DSAI3202 Football Player Performance and Market Value project phase 2.
+Phase 2 — MLOps Pipeline (Feature Store + Model Training Pipeline)
+In Phase 2, our group extended the project into an MLOps workflow following Lab 5 requirements.
+The focus was on automation, modularization, and operationalization of the machine learning lifecycle.
 
+Below is what we implemented.
+
+1. Feature Store Integration (Gold Layer Source)
+We reused Phase 1 engineered datasets (player_season_features and player_season_value_features) as inputs for automated ML processing.
+
+These were registered as a reusable Data Asset in Azure ML:
+
+✔ playeranalytics_DataAsset
+— this became the pipeline input source.
+
+2. Component-Based Architecture
+We developed an MLOps pipeline based on three independent modular components, each packaged as:
+
+✔ Python script
+✔ YAML specification
+✔ Container environment + inputs/outputs definition
+
+This allows traceability, reuse, version control and reproducibility.
+
+Component A — Feature Retrieval
+📌 Purpose
+Pull curated feature datasets from Gold Layer, merge them, split train/test and save outputs.
+
+📌 Outputs
+
+train.parquet
+
+test.parquet
+
+📌 What it does
+
+✔ Reads Gold data
+✔ Joins performance + value tables
+✔ Performs 80/20 train–test split
+✔ Saves outputs for downstream stages
+
+Component B — Feature Selection (Baseline Method)
+📌 Purpose
+Automatically select informative features prior to training.
+
+📌 What it does
+
+✔ Reads training parquet
+✔ Applies VarianceThreshold feature filtering
+✔ Stores list of selected features in .json output
+
+📌 Output
+
+selected_features.json
+
+This selection is reused by component C to train using only relevant features.
+
+Component C — Model Training + Evaluation
+📌 Purpose
+Train a supervised ML model inventory and evaluate it.
+
+📌 What it does
+
+✔ Loads train/test data
+✔ Reads selected feature list from Component B
+✔ Trains a Random Forest model
+✔ Predicts on test data
+✔ Calculates RMSE
+✔ Saves model artifact + metrics
+
+📌 Outputs
+
+model.pkl
+
+metrics.json
+
+We later registered this model in Azure ML.
+
+3. Azure ML Pipeline Assembly
+All components were orchestrated using an Azure ML pipeline script:
+
+➡ pipeline_job.py
+
+The pipeline:
+
+Calls feature retrieval
+
+Passes outputs to feature selection
+
+Feeds selected features + datasets into training component
+
+Returns the trained model and evaluation metrics
+
+✔ We set default compute = compute1
+✔ We executed the pipeline through Azure ML Job submission
+
+Output appeared in Azure ML Studio under Jobs.
+
+4. Model Registration
+Once training completed successfully:
+
+✔ Model artifact was stored
+✔ Metadata included feature selection list + version reference
+
+This enables future deployment or retraining using lineage traceability.
+
+5. Repository & Folder Structure
+We created a production-style project structure:
+
+player_mlops/
+│
+├── components/
+│   ├── feature_retrieval.py
+│   ├── feature_retrieval.yml
+│   ├── feature_selection.py
+│   ├── feature_selection.yml
+│   ├── train_eval.py
+│   └── train_eval.yml
+│
+├── pipeline_job.py   ← Pipeline definition & submission
+└── README.md         ← Documentation
+This follows MLOps best practices for modularity and maintainability.
+
+6. What We Achieved in Phase 2
+✔ Built automated model workflow
+✔ Applied structured feature selection
+✔ Enabled reproducible ML training
+✔ Registered model artifacts for deployment
+✔ Used Azure ML Pipelines and Compute Cluster execution
+✔ Created reusable components for retraining or scheduling
